@@ -29,10 +29,23 @@ waylandproto('unstable/xdg-decoration/xdg-decoration-unstable-v1.xml', {
 	code='xdg-decoration-unstable-v1-protocol.c',
 })
 
+waylandproto('unstable/xdg-output/xdg-output-unstable-v1.xml', {
+	client='include/xdg-output-unstable-v1-client-protocol.h',
+	server='include/xdg-output-unstable-v1-server-protocol.h',
+	code='xdg-output-unstable-v1-protocol.c',
+})
+
 waylandproto('unstable/text-input/text-input-unstable-v3.xml', {
 	client='include/text-input-unstable-v3-client-protocol.h',
 	server='include/text-input-unstable-v3-server-protocol.h',
 	code='text-input-unstable-v3-protocol.c',
+})
+
+
+waylandproto('unstable/primary-selection/primary-selection-unstable-v1.xml', {
+        client='include/primary-selection-unstable-v1-client-protocol.h',
+        server='include/primary-selection-unstable-v1-server-protocol.h',
+        code='primary-selection-unstable-v1-protocol.c',
 })
 
 pkg.hdrs = {
@@ -45,8 +58,12 @@ pkg.hdrs = {
 	'$outdir/include/linux-dmabuf-unstable-v1-server-protocol.h',
 	'$outdir/include/xdg-decoration-unstable-v1-client-protocol.h',
 	'$outdir/include/xdg-decoration-unstable-v1-server-protocol.h',
+	'$outdir/include/xdg-output-unstable-v1-client-protocol.h',
+	'$outdir/include/xdg-output-unstable-v1-server-protocol.h',
 	'$outdir/include/text-input-unstable-v3-client-protocol.h',
 	'$outdir/include/text-input-unstable-v3-server-protocol.h',
+	'$outdir/include/primary-selection-unstable-v1-client-protocol.h',
+	'$outdir/include/primary-selection-unstable-v1-server-protocol.h',
 }
 
 fetch 'git'

@@ -376,3 +376,12 @@
 	path = pkg/zstd/src
 	url = https://github.com/facebook/zstd
 	ignore = all
+[submodule "pkg/foot/src"]
+	path = pkg/foot/src
+	url = https://codeberg.org/dnkl/foot
+[submodule "pkg/fcft/src"]
+	path = pkg/fcft/src
+	url = https://codeberg.org/dnkl/fcft
+[submodule "pkg/tllist/src"]
+	path = pkg/tllist/src
+	url = https://codeberg.org/dnkl/tllist

@@ -9,6 +9,7 @@ pkg.hdrs = copy('$outdir/include/xkbcommon', '$srcdir/include/xkbcommon', {
 	'xkbcommon-compat.h',
 	'xkbcommon-keysyms.h',
 	'xkbcommon-names.h',
+	'xkbcommon-compose.h',
 })
 
 lib('libxkbcommon.a', [[src/(
