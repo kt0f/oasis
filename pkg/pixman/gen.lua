@@ -65,6 +65,10 @@ lib('libpixman.a', [[
 		pixman-trap.c
 		pixman-utils.c
 		@x86_64(pixman-mmx.c.o pixman-sse2.c.o pixman-ssse3.c.o)
+		@aarch64(
+			pixman-arm-neon.c
+			pixman-arma64-neon-asm.S
+			pixman-arma64-neon-asm-bilinear.S)
 	)
 ]])
 

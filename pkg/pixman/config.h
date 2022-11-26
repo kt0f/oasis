@@ -73,3 +73,7 @@
 # define USE_SSE3 1
 # define USE_X86_MMX 1
 #endif
+
+#ifdef __aarch64__
+# define USE_ARM_A64_NEON 1
+#endif
