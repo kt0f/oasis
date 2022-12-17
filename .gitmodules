@@ -141,9 +141,6 @@
 [submodule "pkg/libgpiod/src"]
 	path = pkg/libgpiod/src
 	url = https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
-[submodule "pkg/libinput/src"]
-	path = pkg/libinput/src
-	url = https://github.com/oasislinux/libinput
 [submodule "pkg/libjpeg-turbo/src"]
 	path = pkg/libjpeg-turbo/src
 	url = https://github.com/libjpeg-turbo/libjpeg-turbo
@@ -385,3 +382,18 @@
 [submodule "pkg/tllist/src"]
 	path = pkg/tllist/src
 	url = https://codeberg.org/dnkl/tllist
+[submodule "pkg/wlroots/src"]
+	path = pkg/wlroots/src
+	url = https://gitlab.freedesktop.org/wlroots/wlroots
+[submodule "pkg/libudev-zero/src"]
+	path = pkg/libudev-zero/src
+	url = https://github.com/illiliti/libudev-zero
+[submodule "pkg/libgbm/src"]
+	path = pkg/libgbm/src
+	url = https://github.com/thayama/libgbm
+[submodule "pkg/seatd/src"]
+	path = pkg/seatd/src
+	url = https://git.sr.ht/~kennylevinsen/seatd
+[submodule "pkg/libinput/src"]
+	path = pkg/libinput/src
+	url = https://gitlab.freedesktop.org/libinput/libinput

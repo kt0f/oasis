@@ -5,6 +5,7 @@ cflags{
 	'-isystem $builddir/pkg/libevdev/include',
 	'-isystem $builddir/pkg/linux-headers/include',
 	'-isystem $builddir/pkg/mtdev/include',
+	'-isystem $outdir',
 }
 
 pkg.hdrs = copy('$outdir/include', '$srcdir/src', {'libinput.h'})
@@ -12,7 +13,10 @@ pkg.deps = {
 	'pkg/libevdev/headers',
 	'pkg/linux-headers/headers',
 	'pkg/mtdev/headers',
+	'$outdir/libudev.h',
 }
+
+build('copy', '$outdir/libudev.h', '$builddir/pkg/libudev-zero/include/udev.h')
 
 lib('libinput.a', [[
 	src/(
@@ -31,6 +35,7 @@ lib('libinput.a', [[
 		evdev-tablet.c
 		evdev-tablet-pad.c
 		evdev-tablet-pad-leds.c
+		evdev-wheel.c
 		filter.c
 		filter-flat.c
 		filter-low-dpi.c
@@ -40,24 +45,24 @@ lib('libinput.a', [[
 		filter-touchpad-x230.c
 		filter-tablet.c
 		filter-trackpoint.c
-		netlink-seat.c
+		filter-trackpoint-flat.c
 		path-seat.c
 		quirks.c
 		timer.c
-
+		udev-seat.c
 		util-list.c
 		util-ratelimit.c
 		util-strings.c
 		util-prop-parsers.c
 	)
 	$builddir/pkg/libevdev/libevdev.a
+	$builddir/pkg/libudev-zero/libudev.a
 	$builddir/pkg/mtdev/libmtdev.a
 ]])
 
 local quirks = {
 	-- <cd src/quirks && printf "\t'%s',\n" *.quirks
 	'10-generic-keyboard.quirks',
-	'10-generic-lid.quirks',
 	'10-generic-mouse.quirks',
 	'10-generic-trackball.quirks',
 	'30-vendor-a4tech.quirks',
@@ -72,7 +77,6 @@ local quirks = {
 	'30-vendor-madcatz.quirks',
 	'30-vendor-microsoft.quirks',
 	'30-vendor-razer.quirks',
-	'30-vendor-starlabs.quirks',
 	'30-vendor-synaptics.quirks',
 	'30-vendor-trust.quirks',
 	'30-vendor-vmware.quirks',
@@ -92,8 +96,6 @@ local quirks = {
 	'50-system-huawei.quirks',
 	'50-system-lenovo.quirks',
 	'50-system-pine64.quirks',
-	'50-system-prestigio.quirks',
-	'50-system-purism.quirks',
 	'50-system-sony.quirks',
 	'50-system-system76.quirks',
 	'50-system-toshiba.quirks',
