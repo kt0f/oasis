@@ -30,3 +30,5 @@ exe('libgbm.so', [[
 ]])
 
 file('lib/libgbm.so', '644', '$outdir/libgbm.so')
+
+fetch 'git'

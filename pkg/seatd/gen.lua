@@ -36,3 +36,5 @@ lib('libseat.a', [[
 	libseat/backend/noop.c
 	libseat/backend/seatd.c
 ]])
+
+fetch 'git'

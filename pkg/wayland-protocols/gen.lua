@@ -75,6 +75,12 @@ waylandproto('staging/xdg-activation/xdg-activation-v1.xml', {
         code='xdg-activation-v1-protocol.c',
 })
 
+waylandproto('unstable/xdg-foreign/xdg-foreign-unstable-v1.xml ', {
+        client='include/xdg-foreign-unstable-v1-client-protocol.h',
+        server='include/xdg-foreign-unstable-v1-protocol.h',
+        code='xdg-foreign-unstable-v1-protocol.c',
+})
+
 waylandproto('unstable/xdg-foreign/xdg-foreign-unstable-v2.xml ', {
         client='include/xdg-foreign-unstable-v2-client-protocol.h',
         server='include/xdg-foreign-unstable-v2-protocol.h',
@@ -149,6 +155,8 @@ pkg.hdrs = {
 	'$outdir/include/viewporter-protocol.h',
 	'$outdir/include/xdg-activation-v1-client-protocol.h',
 	'$outdir/include/xdg-activation-v1-protocol.h',
+	'$outdir/include/xdg-foreign-unstable-v1-client-protocol.h',
+	'$outdir/include/xdg-foreign-unstable-v1-protocol.h',
 	'$outdir/include/xdg-foreign-unstable-v2-client-protocol.h',
 	'$outdir/include/xdg-foreign-unstable-v2-protocol.h',
 	'$outdir/include/presentation-time-client-protocol.h',
