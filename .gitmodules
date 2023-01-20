@@ -400,3 +400,6 @@
 [submodule "pkg/meson/src"]
 	path = pkg/meson/src
 	url = https://github.com/mesonbuild/meson
+[submodule "pkg/mako/src"]
+	path = pkg/mako/src
+	url = https://github.com/zzzeek/mako
