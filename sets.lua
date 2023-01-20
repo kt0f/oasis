@@ -78,13 +78,14 @@ return {
 	desktop={
 		'adobe-source-fonts',
 		'dmenu',
+		'foot',
 		'mupdf',
 		'netsurf',
+		'libgbm',
 		'libinput',
-		'st',
-		'swc',
+		'opengldummy',
 		'terminus-font',
-		'velox',
+		'wlroots',
 		'xkeyboard-config',
 	},
 }
