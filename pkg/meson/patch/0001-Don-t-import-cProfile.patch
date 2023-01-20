@@ -1,0 +1,25 @@
+From a5dec54bd61961e3fb4a26d985f7ce555c574bec Mon Sep 17 00:00:00 2001
+From: usr <usr>
+Date: Fri, 20 Jan 2023 14:14:27 +0000
+Subject: [PATCH] Don't import cProfile
+
+---
+ mesonbuild/msetup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mesonbuild/msetup.py b/mesonbuild/msetup.py
+index 4b6d50882..7ee05458a 100644
+--- a/mesonbuild/msetup.py
++++ b/mesonbuild/msetup.py
+@@ -18,7 +18,7 @@ import sys, stat
+ import datetime
+ import os.path
+ import platform
+-import cProfile as profile
++# import cProfile as profile
+ import argparse
+ import tempfile
+ import shutil
+-- 
+2.38.1
+

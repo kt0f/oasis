@@ -397,3 +397,6 @@
 [submodule "pkg/libinput/src"]
 	path = pkg/libinput/src
 	url = https://gitlab.freedesktop.org/libinput/libinput
+[submodule "pkg/meson/src"]
+	path = pkg/meson/src
+	url = https://github.com/mesonbuild/meson
