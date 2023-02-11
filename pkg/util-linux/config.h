@@ -68,7 +68,7 @@
 #define HAVE_LASTLOG_H 1
 #define HAVE_LCHOWN 1
 /* #undef HAVE_LIBAUDIT */
-/* #undef HAVE_LIBBLKID */
+#define HAVE_LIBBLKID 1
 /* #undef HAVE_LIBCAP_NG */
 /* #undef HAVE_LIBCRYPT */
 /* #undef HAVE_LIBECONF */
@@ -100,7 +100,7 @@
 #define HAVE_LINUX_MAJOR_H 1
 #define HAVE_LINUX_NET_NAMESPACE_H 1
 #define HAVE_LINUX_NSFS_H 1
-#define HAVE_LINUX_RAW_H 1
+/* #undef HAVE_LINUX_RAW_H */
 #define HAVE_LINUX_SECUREBITS_H 1
 #define HAVE_LINUX_TIOCL_H 1
 #define HAVE_LINUX_VERSION_H 1
@@ -137,7 +137,7 @@
 #define HAVE_PROGRAM_INVOCATION_SHORT_NAME 1
 #define HAVE_PTY 1
 #define HAVE_PTY_H 1
-/* #undef HAVE_QSORT_R */
+#define HAVE_QSORT_R 1
 #define HAVE_REBOOT 1
 /* #undef HAVE_RESIZETERM */
 /* #undef HAVE_RPMATCH */

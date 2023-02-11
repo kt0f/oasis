@@ -157,6 +157,9 @@
 [submodule "pkg/libpng/src"]
 	path = pkg/libpng/src
 	url = https://github.com/glennrp/libpng
+[submodule "pkg/libtirpc/src"]
+	path = pkg/libtirpc/src
+	url = git://git.linux-nfs.org/projects/steved/libtirpc.git
 [submodule "pkg/libtls-bearssl/src"]
 	path = pkg/libtls-bearssl/src
 	url = https://git.sr.ht/~mcf/libtls-bearssl
@@ -247,6 +250,9 @@
 [submodule "pkg/openssh/src"]
 	path = pkg/openssh/src
 	url = https://github.com/oasislinux/openssh.git
+[submodule "pkg/pax/src"]
+	path = pkg/pax/src
+	url = https://git.sr.ht/~mcf/pax
 [submodule "pkg/pciutils/src"]
 	path = pkg/pciutils/src
 	url = https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git
@@ -353,6 +359,9 @@
 	path = pkg/wayland/src
 	url = https://anongit.freedesktop.org/git/wayland/wayland.git
 	ignore = all
+[submodule "pkg/wl9/src"]
+	path = pkg/wl9/src
+	url = https://git.sr.ht/~mcf/wl9
 [submodule "pkg/wld/src"]
 	path = pkg/wld/src
 	url = https://github.com/michaelforney/wld
