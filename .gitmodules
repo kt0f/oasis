@@ -412,3 +412,9 @@
 [submodule "pkg/mako/src"]
 	path = pkg/mako/src
 	url = https://github.com/zzzeek/mako
+[submodule "pkg/pygments/src"]
+	path = pkg/pygments/src
+	url = https://github.com/pygments/pygments
+[submodule "pkg/markupsafe/src"]
+	path = pkg/markupsafe/src
+	url = https://github.com/pallets/markupsafe
