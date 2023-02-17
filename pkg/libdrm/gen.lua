@@ -25,6 +25,7 @@ pkg.hdrs = {
 		'i915_drm.h',
 		'amdgpu_drm.h',
 	}),
+	install=true,
 }
 
 pkg.deps = {
@@ -82,5 +83,7 @@ if config.video_drivers and config.video_drivers['amdgpu'] then
 	]])
 	file('share/libdrm/amdgpu.ids', '644', '$srcdir/data/amdgpu.ids')
 end
+
+file('lib/libdrm.a', '644', '$outdir/libdrm.a')
 
 fetch 'git'
