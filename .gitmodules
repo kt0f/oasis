@@ -418,3 +418,6 @@
 [submodule "pkg/markupsafe/src"]
 	path = pkg/markupsafe/src
 	url = https://github.com/pallets/markupsafe
+[submodule "pkg/u-config/src"]
+	path = pkg/u-config/src
+	url = https://github.com/skeeto/u-config
