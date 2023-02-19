@@ -10,6 +10,11 @@ pkg.deps = {'pkg/linux-headers/headers'}
 local libs = {}
 local modules = load 'modules.lua'
 
+if modules._bz2 then
+	cflags{'-isystem $builddir/pkg/bzip2/include'}
+	table.insert(pkg.deps, 'pkg/bzip2/headers')
+	table.insert(libs, 'bzip2/libbz2.a')
+end
 if modules._ctypes then
 	cflags{'-isystem $builddir/pkg/libffi/include'}
 	table.insert(pkg.deps, 'pkg/libffi/headers')

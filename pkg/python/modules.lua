@@ -82,7 +82,7 @@ return {
 	--_scproxy={'_scproxy.c'},
 	zlib={'zlibmodule.c'},
 	binascii={'binascii.c'},
-	--_bz2={'_bz2module.c'},
+	_bz2={'_bz2module.c'},
 	--_lzma={'_lzmamodule.c'},
 	pyexpat={'pyexpat.c'},
 	--_elementtree={'_elementtree.c'},
