@@ -421,3 +421,12 @@
 [submodule "pkg/u-config/src"]
 	path = pkg/u-config/src
 	url = https://github.com/skeeto/u-config
+[submodule "pkg/sonic/src"]
+	path = pkg/sonic/src
+	url = https://github.com/waywardgeek/sonic
+[submodule "pkg/pcaudiolib/src"]
+	path = pkg/pcaudiolib/src
+	url = https://github.com/espeak-ng/pcaudiolib
+[submodule "pkg/espeak-ng/src"]
+	path = pkg/espeak-ng/src
+	url = https://github.com/espeak-ng/espeak-ng

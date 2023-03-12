@@ -88,6 +88,9 @@ rule awk
   command = awk $expr $in >$out
   description = 	AWK	$out
 
+rule espeak
+  command =  cd $datadir && ESPEAK_DATA_PATH=. espeak-ng $options
+
 rule grep
   command = grep $expr $in >$out
 
