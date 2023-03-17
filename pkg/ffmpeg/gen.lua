@@ -21,6 +21,7 @@ cflags{
 
 pkg.deps = {
 	'$outdir/config.h',
+	'$outdir/config_components.h',
 	'$gendir/headers',
 }
 
@@ -33,7 +34,7 @@ if arch == 'x86' then
 		'-P $outdir/config.asm',
 	}
 
-	pkg.deps[3] = '$outdir/config.asm'
+	pkg.deps[4] = '$outdir/config.asm'
 end
 
 -- TODO: Copy the rest of the headers.
@@ -55,6 +56,7 @@ local probe = {
 }
 
 build('cat', '$outdir/config.h', {'$dir/config-head.h', probe, '$dir/config.h', '$dir/config-tail.h'})
+build('copy', '$outdir/config_components.h', '$dir/config_components.h')
 
 if arch == 'x86' then
 	build('sed', '$outdir/config.asm', {probe, '$dir/config.h'}, {
@@ -69,19 +71,19 @@ build('awk', '$outdir/include/libavutil/avconfig.h', {'$dir/config.h', '|', '$di
 	expr='-f $dir/avconfig.awk',
 })
 
-rule('genlist', 'lua $dir/list.lua $dir/config.h $type $var <$in >$out')
+rule('genlist', 'lua $dir/list.lua $dir/config_components.h $type $var <$in >$out')
 local function genlist(out, src, type, var)
-	build('genlist', out, {src, '|', '$dir/list.lua', '$dir/config.h'}, {type=type, var=var})
+	build('genlist', out, {src, '|', '$dir/list.lua', '$dir/config_components.h'}, {type=type, var=var})
 	table.insert(pkg.deps, out)
 end
 genlist('$outdir/internal/libavfilter/filter_list.c', '$srcdir/libavfilter/allfilters.c', 'AVFilter', 'filter_list')
-genlist('$outdir/internal/libavcodec/codec_list.c', '$srcdir/libavcodec/allcodecs.c', 'AVCodec', 'codec_list')
+genlist('$outdir/internal/libavcodec/codec_list.c', '$srcdir/libavcodec/allcodecs.c', 'FFCodec', 'codec_list')
 genlist('$outdir/internal/libavcodec/parser_list.c', '$srcdir/libavcodec/parsers.c', 'AVCodecParser', 'parser_list')
-genlist('$outdir/internal/libavcodec/bsf_list.c', '$srcdir/libavcodec/bitstream_filters.c', 'AVBitStreamFilter', 'bitstream_filters')
+genlist('$outdir/internal/libavcodec/bsf_list.c', '$srcdir/libavcodec/bitstream_filters.c', 'FFBitStreamFilter', 'bitstream_filters')
 genlist('$outdir/internal/libavformat/demuxer_list.c', '$srcdir/libavformat/allformats.c', 'AVInputFormat', 'demuxer_list')
-genlist('$outdir/internal/libavformat/muxer_list.c', '$srcdir/libavformat/allformats.c', 'AVOutputFormat', 'muxer_list')
+genlist('$outdir/internal/libavformat/muxer_list.c', '$srcdir/libavformat/allformats.c', 'FFOutputFormat', 'muxer_list')
 genlist('$outdir/internal/libavdevice/indev_list.c', '$srcdir/libavdevice/alldevices.c', 'AVInputFormat', 'indev_list')
-genlist('$outdir/internal/libavdevice/outdev_list.c', '$srcdir/libavdevice/alldevices.c', 'AVOutputFormat', 'outdev_list')
+genlist('$outdir/internal/libavdevice/outdev_list.c', '$srcdir/libavdevice/alldevices.c', 'FFOutputFormat', 'outdev_list')
 genlist('$outdir/internal/libavformat/protocol_list.c', '$srcdir/libavformat/protocols.c', 'URLProtocol', 'url_protocols')
 
 build('awk', '$outdir/include/libavutil/ffversion.h', {'$dir/ver'}, {
@@ -89,13 +91,14 @@ build('awk', '$outdir/include/libavutil/ffversion.h', {'$dir/ver'}, {
 })
 
 local options = {}
-for line in iterlines('config.h', 1) do
-	local cfg, val = line:match('^#define ([^ ]+) ([^ ]+)')
-	if cfg then
-		options[cfg] = val == '1' or val == archprobes[arch]
+for _, file in ipairs{'config.h', 'config_components.h'} do
+	for line in iterlines(file, 1) do
+		local cfg, val = line:match('^#define ([^ ]+) ([^ ]+)')
+		if cfg then
+			options[cfg] = val == '1'
+		end
 	end
 end
-
 local sources = {
 	libavcodec={},
 	libavdevice={},
@@ -125,7 +128,7 @@ for line in iterlines('sources.txt', 1) do
 	end
 end
 -- combination option in libavutil/x86/Makefile
-if options.HAVE_MMX_EXTERNAL then
+if not options.HAVE_MMX_INLINE and options.HAVE_MMX_EXTERNAL and not options.HAVE_MM_EMPTY then
 	sources.libavutil['libavutil/x86/emms.asm'] = true
 end
 for lib, srcs in pairs(sources) do
@@ -168,6 +171,12 @@ if options.CONFIG_ZLIB then
 	table.insert(sources.libavformat, '$builddir/pkg/zlib/libz.a')
 end
 
+if options.CONFIG_BLURAY_PROTOCOL then
+	cflags{'-isystem $builddir/pkg/libbluray/include'}
+	table.insert(pkg.deps, 'pkg/libbluray/headers')
+	table.insert(sources.libavcodec, '$builddir/pkg/libbluray/libbluray.a.d')
+end
+
 lib('libavcodec.a', {
 	expand{'libavcodec/', {
 		'ac3_parser.c',
@@ -176,9 +185,7 @@ lib('libavcodec.a', {
 		'avcodec.c',
 		'avdct.c',
 		'avpacket.c',
-		'avpicture.c',
 		'bitstream.c',
-		'bitstream_filter.c',
 		'bitstream_filters.c',
 		'bsf.c',
 		'codec_desc.c',
@@ -188,6 +195,7 @@ lib('libavcodec.a', {
 		'dirac.c',
 		'dv_profile.c',
 		'encode.c',
+		'get_buffer.c',
 		'imgconvert.c',
 		'jni.c',
 		'mathtables.c',
@@ -200,6 +208,8 @@ lib('libavcodec.a', {
 		'qsv_api.c',
 		'raw.c',
 		'utils.c',
+		'version.c',
+		'vlc.c',
 		'vorbis_parser.c',
 		'xiph.c',
 		table.unpack(paths[[
@@ -221,6 +231,7 @@ lib('libavdevice.a', {
 		'alldevices.c',
 		'avdevice.c',
 		'utils.c',
+		'version.c',
 	}},
 	sources.libavdevice,
 	'libavcodec.a.d',
@@ -236,6 +247,7 @@ lib('libavfilter.a', {
 		'avfiltergraph.c',
 		'buffersink.c',
 		'buffersrc.c',
+		'colorspace.c',
 		'drawutils.c',
 		'fifo.c',
 		'formats.c',
@@ -243,7 +255,7 @@ lib('libavfilter.a', {
 		'framequeue.c',
 		'graphdump.c',
 		'graphparser.c',
-		'transform.c',
+		'version.c',
 		'video.c',
 		table.unpack(paths[[
 			@aarch64 aarch64/(
@@ -260,21 +272,29 @@ cc('libavformat/protocols.c', {'$gendir/deps', '$outdir/internal/libavformat/pro
 lib('libavformat.a', {
 	expand{'libavformat/', {
 		'allformats.c',
+		'avformat.c',
 		'avio.c',
 		'aviobuf.c',
+		'demux.c',
+		'demux_utils.c',
 		'dump.c',
+		'dv.c',
 		'format.c',
 		'id3v1.c',
 		'id3v2.c',
+		'isom_tags.c',
 		'metadata.c',
 		'mux.c',
+		'mux_utils.c',
 		'options.c',
 		'os_support.c',
 		'protocols.c.o',
 		'riff.c',
 		'sdp.c',
+		'seek.c',
 		'url.c',
 		'utils.c',
+		'version.c',
 	}},
 	sources.libavformat,
 	'libavcodec.a.d',
@@ -286,6 +306,7 @@ lib('libavutil.a', {
 		'adler32.c',
 		'aes.c',
 		'aes_ctr.c',
+		'ambient_viewing_environment.c',
 		'audio_fifo.c',
 		'avstring.c',
 		'avsscanf.c',
@@ -296,10 +317,11 @@ lib('libavutil.a', {
 		'cast5.c',
 		'camellia.c',
 		'channel_layout.c',
-		'color_utils.c',
 		'cpu.c',
 		'crc.c',
+		'csp.c',
 		'des.c',
+		'detection_bbox.c',
 		'dict.c',
 		'display.c',
 		'dovi_meta.c',
@@ -315,6 +337,7 @@ lib('libavutil.a', {
 		'frame.c',
 		'hash.c',
 		'hdr_dynamic_metadata.c',
+		'hdr_dynamic_vivid_metadata.c',
 		'hmac.c',
 		'hwcontext.c',
 		'imgutils.c',
@@ -324,6 +347,7 @@ lib('libavutil.a', {
 		'lls.c',
 		'log.c',
 		'log2_tab.c',
+		'lzo.c',
 		'mathematics.c',
 		'mastering_display_metadata.c',
 		'md5.c',
@@ -357,6 +381,8 @@ lib('libavutil.a', {
 		'tx_float.c',
 		'tx_double.c',
 		'tx_int32.c',
+		'uuid.c',
+		'version.c',
 		'video_enc_params.c',
 		'film_grain_params.c',
 		table.unpack(paths[[
@@ -371,6 +397,7 @@ lib('libavutil.a', {
 				float_dsp.asm
 				imgutils.asm
 				lls.asm
+				tx_float.asm
 			)
 			@aarch64 aarch64/(
 				cpu.c
@@ -393,6 +420,7 @@ lib('libswresample.a', {
 		'resample_dsp.c',
 		'swresample.c',
 		'swresample_frame.c',
+		'version.c',
 		table.unpack(paths[[
 			@x86_64 x86/(
 				audio_convert.asm
@@ -422,6 +450,7 @@ lib('libswscale.a', {
 		'hscale.c',
 		'hscale_fast_bilinear.c',
 		'gamma.c',
+		'half2float.c',
 		'input.c',
 		'options.c',
 		'output.c',
@@ -430,6 +459,7 @@ lib('libswscale.a', {
 		'swscale.c',
 		'swscale_unscaled.c',
 		'utils.c',
+		'version.c',
 		'yuv2rgb.c',
 		'vscale.c',
 		table.unpack(paths[[
@@ -441,6 +471,7 @@ lib('libswscale.a', {
 				input.asm
 				output.asm
 				scale.asm
+				scale_avx2.asm
 				rgb_2_rgb.asm
 				yuv_2_rgb.asm
 				yuv2yuvX.asm
@@ -471,14 +502,30 @@ local libs = {
 }
 
 cc('fftools/cmdutils.c', {'$gendir/deps'})
+cc('fftools/opt_common.c', {'$gendir/deps'})
 
-exe('ffprobe', {paths[[fftools/(ffprobe.c cmdutils.c.o)]], libs})
+exe('ffprobe', {paths[[fftools/(ffprobe.c cmdutils.c.o opt_common.c.o)]], libs})
 file('bin/ffprobe', '755', '$outdir/ffprobe')
 
-exe('ffmpeg', {paths[[fftools/(ffmpeg.c ffmpeg_opt.c ffmpeg_filter.c ffmpeg_hw.c cmdutils.c.o)]], libs})
+exe('ffmpeg', {paths[[
+	fftools/(
+		ffmpeg.c
+		ffmpeg_demux.c
+		ffmpeg_filter.c
+		ffmpeg_hw.c
+		ffmpeg_mux.c
+		ffmpeg_mux_init.c
+		ffmpeg_opt.c
+		objpool.c
+		sync_queue.c
+		thread_queue.c
+		cmdutils.c.o
+		opt_common.c.o
+	)
+]], libs})
 file('bin/ffmpeg', '755', '$outdir/ffmpeg')
 
-rule('texi2mdoc', [[$builddir/pkg/texi2mdoc/host/texi2mdoc -d 'November 7, 2018' -I $outdir $in >$out]])
+rule('texi2mdoc', [[$builddir/pkg/texi2mdoc/host/texi2mdoc -d 'February 27, 2023' -I $outdir $in >$out]])
 build('texi2mdoc', '$outdir/ffprobe.1', {'$srcdir/doc/ffprobe.texi', '|', '$outdir/config.texi', '$builddir/pkg/texi2mdoc/host/texi2mdoc'})
 build('texi2mdoc', '$outdir/ffmpeg.1', {'$srcdir/doc/ffmpeg.texi', '|', '$outdir/config.texi', '$builddir/pkg/texi2mdoc/host/texi2mdoc'})
 man{'$outdir/ffprobe.1', '$outdir/ffmpeg.1'}
